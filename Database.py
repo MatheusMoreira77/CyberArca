@@ -49,21 +49,25 @@ def adcionar():
 def Copy_password():
     con = sqlite3.connect('Ark.db')
     cur = con.cursor()
-
-    website = input("Chose the website number to copy the password: ")
     cur.execute("SELECT id, website FROM users")
-    results = cur.fetchall()
+    all_entries = cur.fetchall()
 
-    if results:
-        for row in results:
-            print(f"{row[0]} - {row[1]}")
-        website_id = input("Enter the website ID to copy the password: ")
-        cur.execute("SELECT password_hash FROM users WHERE id = ?", (website_id,))
-        result = cur.fetchone()
-        if result:
-            password_hash = result[0]
-            print(f"Password for {website} copied to clipboard.")
+    if not all_entries:
+        print("No entries found.")
+        return
+
+    print("Select an entry to copy the password:")
+    for entry in all_entries:
+        print(f"{entry[0]}: {entry[1]}")
+    entry_id = input("Enter the ID of the entry: ")
+    cur.execute("SELECT password_hash FROM users WHERE id = ?", (entry_id,))
+    result = cur.fetchone()
+    if result:
+        password_hash = result[0]
+        password = hashlib.sha256(password_hash.encode()).hexdigest()
+        pyperclip.copy(password)
+        print("Password copied to clipboard.")
     else:
-        print("Website not found.")
+        print("Entry not found.")
 
     con.close()
