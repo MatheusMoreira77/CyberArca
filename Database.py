@@ -1,7 +1,6 @@
 import sqlite3
 import random
 import string
-import hashlib
 import pyperclip
 import getpass
 
