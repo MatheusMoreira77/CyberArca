@@ -1,0 +1,7 @@
+@"
+__pycache__/
+*.pyc
+Ark.db
+"@ | Out-File -Encoding utf8 .gitignore
+
+git rm -r --cached __pycache__ Ark.db
